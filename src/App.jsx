@@ -158,12 +158,12 @@ function App() {
   return (
     <div className="app-container">
       {/* 사이드바 */}
-      <aside className="sidebar">
-        <div className="logo">
+      <aside className="sidebar glass">
+        <div className="logo animate-fade-in-up">
           <h2>To-Do Manager</h2>
         </div>
         
-        <nav className="nav-section">
+        <nav className="nav-section animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
           <p className="section-title">카테고리</p>
           <button 
             className={`nav-item ${activeTab === 'today' && !selectedFolderId ? 'active' : ''}`}
@@ -185,7 +185,7 @@ function App() {
           </button>
         </nav>
 
-        <nav className="nav-section">
+        <nav className="nav-section animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
           <p className="section-title">폴더</p>
           {folders.map(folder => (
             <button 
@@ -203,17 +203,17 @@ function App() {
       {/* 메인 콘텐츠 */}
       <main className="main-content">
         {/* 상단 대시보드 영역 */}
-        <header className="dashboard-header fade-in">
+        <header className="dashboard-header glass animate-fade-in-up">
           <div className="dashboard-info">
             <h1>오늘의 일정</h1>
             <p className="date-display">{format(new Date(), 'yyyy년 M월 d일 EEEE', { locale: ko })}</p>
           </div>
           <div className="stats">
-            <div className="stat-card">
+            <div className="stat-card animate-scale-in" style={{ animationDelay: '0.3s' }}>
               <span className="stat-value">{todayTodos.length}</span>
               <span className="stat-label">할 일</span>
             </div>
-            <div className="stat-card">
+            <div className="stat-card animate-scale-in" style={{ animationDelay: '0.4s' }}>
               <span className="stat-value">{todayTodos.filter(t => t.completed).length}</span>
               <span className="stat-label">완료</span>
             </div>
@@ -222,21 +222,25 @@ function App() {
 
         {/* 할일 목록 */}
         <section className="todo-section">
-          <div className="section-header">
+          <div className="section-header animate-fade-in-up" style={{ animationDelay: '0.5s' }}>
             <h3>{selectedFolderId ? folders.find(f => f.id === selectedFolderId)?.name : 
                  activeTab === 'today' ? '오늘' : activeTab === 'week' ? '이번주' : '나중에'}</h3>
-            <button className="add-btn" onClick={openAddModal}>
+            <button className="add-btn animate-scale-in" onClick={openAddModal}>
               <Plus size={20} /> 추가하기
             </button>
           </div>
 
           <div className="todo-list">
             {filteredTodos.length > 0 ? (
-              filteredTodos.map(todo => (
-                <div key={todo.id} className={`todo-card fade-in ${todo.completed ? 'completed' : ''}`}
-                     style={{ borderLeft: `5px solid ${getFolderColor(todo.folderId)}` }}>
+              filteredTodos.map((todo, index) => (
+                <div key={todo.id} 
+                     className={`todo-card animate-fade-in-up ${todo.completed ? 'completed' : ''}`}
+                     style={{ 
+                       borderLeft: `5px solid ${getFolderColor(todo.folderId)}`,
+                       animationDelay: `${0.6 + index * 0.05}s`
+                     }}>
                   <div className="todo-check" onClick={() => toggleComplete(todo.id)}>
-                    {todo.completed ? <CheckCircle2 size={24} className="icon-completed" /> : <Circle size={24} />}
+                    {todo.completed ? <CheckCircle2 size={24} className="icon-completed animate-scale-in" /> : <Circle size={24} />}
                   </div>
                   <div className="todo-info" onClick={() => openEditModal(todo)}>
                     <h4>{todo.title}</h4>
@@ -254,7 +258,7 @@ function App() {
                 </div>
               ))
             ) : (
-              <div className="empty-state">
+              <div className="empty-state animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
                 <p>할 일이 없습니다. 새로운 일을 추가해보세요!</p>
               </div>
             )}
@@ -265,7 +269,7 @@ function App() {
       {/* 모달 */}
       {isModalOpen && (
         <div className="modal-overlay">
-          <div className="modal-content fade-in">
+          <div className="modal-content animate-scale-in">
             <div className="modal-header">
               <h3>{editingTodo ? '할 일 수정' : '새로운 할 일'}</h3>
               <button onClick={() => setIsModalOpen(false)}><X size={24} /></button>
@@ -331,198 +335,215 @@ function App() {
           display: flex;
           height: 100vh;
           width: 100%;
-          background-color: #fcfcfc;
+          background: transparent;
         }
 
         /* Sidebar Styles */
         .sidebar {
-          width: 260px;
-          background-color: #ffffff;
-          border-right: 1px solid #f0f0f0;
-          padding: 24px;
+          width: 280px;
+          padding: 32px 24px;
           display: flex;
           flex-direction: column;
-          gap: 32px;
+          gap: 40px;
+          z-index: 10;
         }
 
         .logo h2 {
           margin: 0;
-          font-size: 1.25rem;
-          color: #333;
-          font-weight: 700;
+          font-size: 1.4rem;
+          background: linear-gradient(135deg, #1E293B 0%, #3B82F6 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          font-weight: 800;
+          letter-spacing: -0.02em;
         }
 
         .section-title {
-          font-size: 0.75rem;
+          font-size: 0.7rem;
           text-transform: uppercase;
-          color: #999;
-          margin-bottom: 12px;
-          letter-spacing: 0.05em;
+          color: #94A3B8;
+          margin-bottom: 16px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          padding-left: 12px;
         }
 
         .nav-section {
           display: flex;
           flex-direction: column;
-          gap: 4px;
+          gap: 6px;
         }
 
         .nav-item {
           display: flex;
           align-items: center;
-          gap: 12px;
-          padding: 10px 12px;
-          border-radius: 8px;
-          color: #555;
+          gap: 14px;
+          padding: 12px 16px;
+          border-radius: 12px;
+          color: #64748B;
           font-size: 0.95rem;
-          transition: all 0.2s ease;
+          font-weight: 500;
+          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           width: 100%;
           text-align: left;
         }
 
         .nav-item:hover {
-          background-color: #f5f5f5;
+          background-color: rgba(59, 130, 246, 0.05);
+          color: #3B82F6;
+          transform: translateX(4px);
         }
 
         .nav-item.active {
-          background-color: #e3f2fd;
-          color: #1976d2;
-          font-weight: 600;
+          background-color: #3B82F6;
+          color: #ffffff;
+          box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
         }
 
         .folder-dot {
-          width: 10px;
-          height: 10px;
+          width: 8px;
+          height: 8px;
           border-radius: 50%;
+          box-shadow: 0 0 10px currentColor;
         }
 
         /* Main Content Styles */
         .main-content {
           flex: 1;
-          padding: 40px;
+          padding: 40px 60px;
           overflow-y: auto;
           display: flex;
           flex-direction: column;
           gap: 40px;
+          background: transparent;
         }
 
         .dashboard-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          background-color: #fff;
-          padding: 30px;
-          border-radius: 16px;
-          box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+          padding: 40px;
+          border-radius: 24px;
         }
 
         .dashboard-info h1 {
           margin: 0;
-          font-size: 1.75rem;
-          color: #1a1a1a;
+          font-size: 2rem;
+          color: #0F172A;
+          font-weight: 800;
+          letter-spacing: -0.03em;
         }
 
         .date-display {
-          margin: 8px 0 0;
-          color: #666;
+          margin: 10px 0 0;
+          color: #64748B;
+          font-size: 1.1rem;
+          font-weight: 500;
         }
 
         .stats {
           display: flex;
-          gap: 24px;
+          gap: 20px;
         }
 
         .stat-card {
           display: flex;
           flex-direction: column;
           align-items: center;
-          background-color: #f8f9fa;
-          padding: 12px 24px;
-          border-radius: 12px;
-          min-width: 80px;
+          background: rgba(255, 255, 255, 0.5);
+          padding: 16px 28px;
+          border-radius: 20px;
+          min-width: 100px;
+          border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
         .stat-value {
-          font-size: 1.5rem;
-          font-weight: 700;
-          color: #333;
+          font-size: 1.8rem;
+          font-weight: 800;
+          color: #1E293B;
         }
 
         .stat-label {
-          font-size: 0.8rem;
-          color: #888;
+          font-size: 0.85rem;
+          color: #94A3B8;
+          font-weight: 600;
         }
 
         /* Todo Section Styles */
         .todo-section {
           display: flex;
           flex-direction: column;
-          gap: 20px;
+          gap: 24px;
         }
 
         .section-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
+          padding: 0 10px;
         }
 
         .section-header h3 {
           margin: 0;
-          font-size: 1.25rem;
-          color: #333;
+          font-size: 1.5rem;
+          color: #1E293B;
+          font-weight: 700;
         }
 
         .add-btn {
           display: flex;
           align-items: center;
-          gap: 8px;
-          background-color: #1a1a1a;
+          gap: 10px;
+          background: #3B82F6;
           color: #fff;
-          padding: 10px 20px;
-          border-radius: 50px;
+          padding: 12px 24px;
+          border-radius: 16px;
           font-weight: 600;
-          transition: transform 0.2s;
+          box-shadow: 0 10px 20px -5px rgba(59, 130, 246, 0.4);
         }
 
         .add-btn:hover {
-          transform: scale(1.05);
-          background-color: #333;
+          background: #2563EB;
+          transform: translateY(-2px) scale(1.02);
         }
 
         .todo-list {
           display: flex;
           flex-direction: column;
-          gap: 12px;
+          gap: 14px;
         }
 
         .todo-card {
           display: flex;
           align-items: center;
-          gap: 16px;
-          background-color: #fff;
-          padding: 16px 20px;
-          border-radius: 12px;
-          box-shadow: 0 2px 10px rgba(0,0,0,0.02);
-          transition: all 0.3s ease;
-          cursor: pointer;
-        }
-
-        .todo-card:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+          gap: 20px;
+          background: rgba(255, 255, 255, 0.8);
+          padding: 20px 28px;
+          border-radius: 20px;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+          border: 1px solid rgba(255, 255, 255, 0.5);
+          backdrop-filter: blur(8px);
         }
 
         .todo-card.completed {
-          opacity: 0.6;
+          opacity: 0.5;
+          filter: grayscale(0.5);
         }
 
         .todo-check {
-          color: #ddd;
+          color: #CBD5E1;
           display: flex;
           align-items: center;
+          transition: all 0.3s ease;
+        }
+
+        .todo-check:hover {
+          color: #3B82F6;
+          transform: scale(1.1);
         }
 
         .icon-completed {
-          color: #4caf50;
+          color: #10B981;
         }
 
         .todo-info {
@@ -531,19 +552,21 @@ function App() {
 
         .todo-info h4 {
           margin: 0;
-          font-size: 1.05rem;
-          color: #333;
+          font-size: 1.15rem;
+          color: #1E293B;
+          font-weight: 600;
+          transition: all 0.3s ease;
         }
 
         .completed .todo-info h4 {
           text-decoration: line-through;
-          color: #888;
+          color: #64748B;
         }
 
         .memo {
-          margin: 4px 0 0;
-          font-size: 0.9rem;
-          color: #666;
+          margin: 6px 0 0;
+          font-size: 0.95rem;
+          color: #64748B;
           display: -webkit-box;
           -webkit-line-clamp: 1;
           -webkit-box-orient: vertical;
@@ -552,30 +575,39 @@ function App() {
 
         .todo-meta {
           display: flex;
-          gap: 16px;
-          margin-top: 8px;
+          gap: 20px;
+          margin-top: 10px;
         }
 
         .meta-item {
           display: flex;
           align-items: center;
-          gap: 6px;
-          font-size: 0.8rem;
-          color: #999;
+          gap: 8px;
+          font-size: 0.85rem;
+          color: #94A3B8;
+          font-weight: 500;
         }
 
         .todo-actions {
           display: flex;
-          gap: 8px;
+          gap: 12px;
+          opacity: 0;
+          transition: all 0.3s ease;
+        }
+
+        .todo-card:hover .todo-actions {
+          opacity: 1;
         }
 
         .delete-btn {
-          color: #ffcdd2;
-          transition: color 0.2s;
+          color: #FDA4AF;
+          padding: 8px;
+          border-radius: 10px;
         }
 
         .delete-btn:hover {
-          color: #f44336;
+          color: #F43F5E;
+          background: rgba(244, 63, 94, 0.1);
         }
 
         /* Modal Styles */
@@ -585,7 +617,8 @@ function App() {
           left: 0;
           right: 0;
           bottom: 0;
-          background-color: rgba(0,0,0,0.4);
+          background-color: rgba(15, 23, 42, 0.3);
+          backdrop-filter: blur(8px);
           display: flex;
           justify-content: center;
           align-items: center;
@@ -596,83 +629,92 @@ function App() {
         .modal-content {
           background-color: #fff;
           width: 100%;
-          max-width: 500px;
-          border-radius: 20px;
-          padding: 30px;
-          box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+          max-width: 520px;
+          border-radius: 32px;
+          padding: 40px;
+          box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
         }
 
         .modal-header {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          margin-bottom: 24px;
+          margin-bottom: 32px;
         }
 
         .modal-header h3 {
           margin: 0;
-          font-size: 1.5rem;
+          font-size: 1.6rem;
+          font-weight: 800;
+          color: #1E293B;
         }
 
         .form-group {
           display: flex;
           flex-direction: column;
-          gap: 8px;
-          margin-bottom: 20px;
+          gap: 10px;
+          margin-bottom: 24px;
         }
 
         .form-group label {
-          font-weight: 600;
+          font-weight: 700;
           font-size: 0.9rem;
-          color: #555;
+          color: #64748B;
         }
 
-        .form-row {
-          display: flex;
-          gap: 16px;
+        input, textarea, select {
+          border: 2px solid #F1F5F9;
+          background: #F8FAFC;
+          padding: 14px 18px;
+          border-radius: 16px;
+          font-size: 1rem;
+          transition: all 0.3s ease;
         }
 
-        .form-row .form-group {
-          flex: 1;
-        }
-
-        textarea {
-          height: 100px;
-          resize: none;
+        input:focus, textarea:focus, select:focus {
+          border-color: #3B82F6;
+          background: #fff;
+          box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
         }
 
         .modal-actions {
           display: flex;
           justify-content: flex-end;
-          gap: 12px;
-          margin-top: 10px;
+          gap: 14px;
+          margin-top: 20px;
         }
 
         .cancel-btn {
-          padding: 12px 24px;
-          border-radius: 12px;
-          color: #666;
-          background-color: #f5f5f5;
+          padding: 14px 28px;
+          border-radius: 16px;
+          color: #64748B;
+          background-color: #F1F5F9;
+          font-weight: 600;
         }
 
         .submit-btn {
-          padding: 12px 30px;
-          border-radius: 12px;
-          background-color: #1a1a1a;
+          padding: 14px 36px;
+          border-radius: 16px;
+          background-color: #3B82F6;
           color: #fff;
-          font-weight: 600;
+          font-weight: 700;
+          box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
         }
 
         .empty-state {
           text-align: center;
-          padding: 60px;
-          color: #999;
-          background-color: #fdfdfd;
-          border: 2px dashed #f0f0f0;
-          border-radius: 16px;
+          padding: 80px 40px;
+          color: #94A3B8;
+          background: rgba(255, 255, 255, 0.3);
+          border: 2px dashed #E2E8F0;
+          border-radius: 32px;
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+          .main-content { padding: 40px; }
+        }
+
         @media (max-width: 768px) {
           .app-container {
             flex-direction: column;
@@ -680,16 +722,15 @@ function App() {
           .sidebar {
             width: 100%;
             height: auto;
-            border-right: none;
-            border-bottom: 1px solid #f0f0f0;
-            padding: 16px;
-            gap: 16px;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+            padding: 20px;
+            gap: 20px;
           }
           .logo { display: none; }
           .nav-section { flex-direction: row; overflow-x: auto; padding-bottom: 8px; }
-          .nav-item { white-space: nowrap; width: auto; }
-          .main-content { padding: 20px; gap: 24px; }
-          .dashboard-header { flex-direction: column; gap: 20px; text-align: center; }
+          .nav-item { white-space: nowrap; width: auto; padding: 10px 18px; }
+          .main-content { padding: 24px; gap: 32px; }
+          .dashboard-header { flex-direction: column; gap: 24px; text-align: center; padding: 30px; }
           .stats { width: 100%; justify-content: center; }
           .form-row { flex-direction: column; gap: 0; }
         }
